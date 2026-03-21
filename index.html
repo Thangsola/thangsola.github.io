@@ -1,109 +1,214 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPX Tracker - GitHub Edition</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <style>
-    body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; padding: 15px 10px; }
-    .container { max-width: 550px; margin: auto; }
-    .header { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-    .nav-pills { overflow-x: auto; display: flex; flex-wrap: nowrap; gap: 8px; margin-bottom: 15px; scrollbar-width: none; }
-    .nav-pills::-webkit-scrollbar { display: none; }
-    .nav-link { font-size: 0.8rem; font-weight: 600; background: white; color: #666; border: 1px solid #eee; border-radius: 10px; white-space: nowrap; padding: 10px 15px; }
-    .nav-link.active { background: #0d6efd !important; color: white; border-color: #0d6efd; }
-    .card-order { background: white; border: none; border-radius: 12px; margin-bottom: 10px; border-left: 6px solid #ccc; box-shadow: 0 2px 8px rgba(0,0,0,0.03); cursor: pointer; transition: 0.2s; }
-    .card-order:active { transform: scale(0.97); }
-    .border-warning { border-left-color: #ffc107 !important; }
-    .border-primary { border-left-color: #0d6efd !important; }
-    .border-success { border-left-color: #198754 !important; }
-    .card-body { padding: 12px 15px; }
-    .sp-name { font-size: 0.95rem; font-weight: 700; color: #1a1a1a; margin-bottom: 5px; }
-    .text-detail { font-size: 0.85rem; color: #444; margin-bottom: 3px; }
-    .badge-status { font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; }
-    .footer-card { background: #fafafa; padding: 8px 15px; border-top: 1px solid #f0f0f0; border-radius: 0 0 12px 12px; font-size: 0.75rem; color: #888; display: flex; justify-content: space-between; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HỆ THỐNG XỬ LÝ VĂN PHÒNG 2026</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --secondary: #673ab7;
+            --warning: #fb8c00;
+            --success: #2e7d32;
+            --bg: #f4f7f9;
+        }
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .card { 
+            background: white; 
+            width: 90%; 
+            max-width: 600px; 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+        }
+        .header { 
+            background: linear-gradient(135deg, #1a73e8, #0d47a1); 
+            color: white; 
+            padding: 25px; 
+            border-radius: 15px; 
+            text-align: center; 
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+        }
+        h1 { margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; font-weight: 500; }
+        #clock { font-size: 40px; font-weight: 700; margin: 10px 0; font-family: 'Courier New', monospace; }
+        #date { font-size: 16px; opacity: 0.8; font-weight: 300; }
+        
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; font-size: 13px; }
+        textarea { 
+            width: 100%; 
+            padding: 15px; 
+            border: 2px solid #e0e4e8; 
+            border-radius: 12px; 
+            font-size: 18px; 
+            box-sizing: border-box; 
+            min-height: 120px; 
+            outline: none;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+        textarea:focus { border-color: var(--primary); background: #white; box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1); }
+        
+        .btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+        button { 
+            padding: 14px 5px; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            color: white; 
+            background: var(--primary); 
+            font-size: 11px; 
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        button:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        button:active { transform: translateY(0); }
+
+        #res-box { 
+            margin-top: 20px; 
+            padding: 25px; 
+            background: #fffef2; 
+            border-radius: 12px;
+            border: 1px dashed #fbc02d; 
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        #res-text { font-size: 22px; color: #c62828; font-weight: 700; display: block; margin-bottom: 20px; line-height: 1.5; }
+        .copy-btn { background: var(--success); width: 100%; font-size: 15px; letter-spacing: 1px; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="header">
-    <h5 class="m-0 text-primary fw-bold">SPX TRACKER</h5>
-    <div id="total-badge" class="badge bg-dark rounded-pill">Đang tải...</div>
-  </div>
+<div class="card">
+    <div class="header">
+        <h1>Hệ Thống Hỗ Trợ Văn Phòng</h1>
+        <div id="clock">00:00:00</div>
+        <div id="date">Đang đồng bộ hệ thống...</div>
+    </div>
 
-  <ul class="nav nav-pills" id="tabs">
-    <button class="nav-link active" onclick="filter('ALL', this)">Tất cả</button>
-    <button class="nav-link" onclick="filter('DELIVERING', this)">🛵 Đang giao</button>
-    <button class="nav-link" onclick="filter('TRANSIT', this)">🚚 Vận chuyển</button>
-    <button class="nav-link" onclick="filter('SUCCESS', this)">✅ Đã giao</button>
-  </ul>
+    <div class="input-group">
+        <label>NỘI DUNG CẦN XỬ LÝ:</label>
+        <textarea id="input" placeholder="Nhập số tiền hoặc đoạn văn bản..." oninput="formatNum(this)"></textarea>
+    </div>
 
-  <div id="list">
-    <div class="text-center p-5"><div class="spinner-border text-primary"></div></div>
-  </div>
+    <div class="btns">
+        <button onclick="run('up')">Viết Hoa All</button>
+        <button onclick="run('smart')" style="background: var(--secondary)">Hoa Đầu Dòng</button>
+        <button onclick="run('money')" style="background: var(--warning)">Đọc Số Tiền ₫</button>
+    </div>
+
+    <div id="res-box">
+        <label>KẾT QUẢ PHÊ DUYỆT:</label>
+        <span id="res-text"></span>
+        <button class="copy-btn" id="btnCopy" onclick="copy()">📋 SAO CHÉP KẾT QUẢ</button>
+    </div>
 </div>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbyFXlSzSa7qIfIky_RRZoIWOEPPSRYJOV7fzw8DPol_e6Chv_-78GmaXn0c7WErHL-1dA/exec"; // DÁN LINK APPS SCRIPT VÀO ĐÂY
-  let orders = [];
-
-  async function loadData() {
-    try {
-      const res = await fetch(API_URL);
-      orders = await res.json();
-      render(orders);
-      document.getElementById('total-badge').innerText = orders.length + " đơn";
-    } catch (e) {
-      document.getElementById('list').innerHTML = "<div class='alert alert-danger'>Không thể kết nối API</div>";
+    // Cập nhật thời gian từ hệ thống máy tính
+    function update() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('vi-VN');
+        const opt = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
+        document.getElementById('date').innerText = now.toLocaleDateString('vi-VN', opt);
     }
-  }
+    setInterval(update, 1000);
+    update();
 
-  function filter(type, btn) {
-    document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    let f = orders;
-    if (type === 'SUCCESS') f = orders.filter(o => o.trangThai.includes('✅'));
-    else if (type === 'DELIVERING') f = orders.filter(o => o.trangThai.toLowerCase().includes('đang giao'));
-    else if (type === 'TRANSIT') f = orders.filter(o => !o.trangThai.includes('✅') && !o.trangThai.toLowerCase().includes('đang giao'));
-    render(f);
-  }
+    // Định dạng số tự động (thêm dấu phẩy)
+    function formatNum(el) {
+        if (/[a-zA-Zà-ỹÀ-Ỹ]/.test(el.value)) return;
+        let v = el.value.replace(/,/g, '');
+        if (v && !isNaN(v)) el.value = Number(v).toLocaleString('en-US');
+    }
 
-  function render(data) {
-    const list = document.getElementById('list');
-    list.innerHTML = data.length ? "" : "<div class='text-center p-5 text-muted'>Trống</div>";
-    data.forEach((o, i) => {
-      const isOk = o.trangThai.includes('✅'), isDel = o.trangThai.toLowerCase().includes('đang giao');
-      const bClass = isOk ? 'border-success' : isDel ? 'border-warning' : 'border-primary';
-      list.innerHTML += `
-        <div class="card card-order ${bClass}" onclick="detail('${o.maDon}')">
-          <div class="card-body">
-            <div class="sp-name">📦 ${o.tenSP}</div>
-            <div class="text-detail"><b>Trạng thái:</b> ${o.trangThai}</div>
-            <div class="text-detail"><b>Mã đơn:</b> <code class="text-danger">${o.maDon}</code></div>
-            <div class="text-detail mt-2">${o.hanhTrinh}</div>
-          </div>
-          <div class="footer-card">
-            <span>⏰ Cập nhật: ${o.capNhat}</span>
-            ${isOk ? '<span class="text-success fw-bold">HOÀN TẤT</span>' : ''}
-          </div>
-        </div>`;
-    });
-  }
+    // Xử lý logic nút bấm
+    function run(mode) {
+        const inp = document.getElementById('input').value.trim();
+        if (!inp) return;
+        let res = "";
+        if (mode === 'up') res = inp.toUpperCase();
+        else if (mode === 'smart') res = inp.toLowerCase().replace(/(^\w|\.\s+\w)/g, c => c.toUpperCase());
+        else res = toVND(inp);
+        
+        document.getElementById('res-text').innerText = res;
+        document.getElementById('res-box').style.display = 'block';
+        document.getElementById('btnCopy').innerText = "📋 SAO CHÉP KẾT QUẢ";
+        document.getElementById('btnCopy').style.background = "#2e7d32";
+    }
 
-  function detail(id) {
-    const o = orders.find(x => x.maDon === id);
-    Swal.fire({
-      title: 'CHI TIẾT LỘ TRÌNH',
-      html: `<div class='text-start small'><b>📍 Hiện tại:</b><br>${o.addrCur.replace(/\n/g,'<br>') || 'N/A'}<br><br><b>🚚 Tiếp theo:</b><br>${o.addrNext.replace(/\n/g,'<br>') || 'N/A'}</div>`,
-      confirmButtonText: 'Đóng'
-    });
-  }
+    // Thuật toán chuyển số sang chữ tiếng Việt
+    function toVND(s) {
+        const v = s.replace(/,/g, '');
+        if (isNaN(v) || v === "") return "Lỗi định dạng số!";
+        const units = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"];
+        const levels = ["", "nghìn", "triệu", "tỷ", "nghìn tỷ", "triệu tỷ"];
+        
+        function read3(n, full) {
+            let r = "", t = Math.floor(n/100), c = Math.floor((n%100)/10), d = n%10;
+            if (t > 0 || full) r += units[t] + " trăm ";
+            if (c > 1) r += units[c] + " mươi ";
+            else if (c === 1) r += "mười ";
+            else if (t > 0 && d > 0) r += "lẻ ";
+            if (d > 0) {
+                if (c > 1 && d === 1) r += "mốt";
+                else if (c > 0 && d === 5) r += "lăm";
+                else r += units[d];
+            }
+            return r.trim();
+        }
 
-  window.onload = loadData;
+        let n = Math.abs(parseInt(v));
+        if (n === 0) return "Không đồng ./.";
+        let str = n.toString(), blocks = [];
+        while (str.length > 0) { blocks.push(str.slice(-3)); str = str.slice(0, -3); }
+        let arr = [];
+        for (let i = blocks.length - 1; i >= 0; i--) {
+            let val = parseInt(blocks[i]);
+            if (val > 0) arr.push(read3(val, i < blocks.length - 1) + " " + levels[i]);
+        }
+        let f = arr.join(", ").trim();
+        return f.charAt(0).toUpperCase() + f.slice(1) + " đồng ./.";
+    }
+
+    // Sao chép kết quả (Bỏ Alert - Dùng hiệu ứng nút)
+    function copy() {
+        const textElement = document.getElementById('res-text');
+        let t = textElement.innerText;
+        if (t.includes("Lỗi")) return;
+        
+        // Xóa dấu phẩy nếu chỉ copy số thuần
+        if (/^[\d,]+$/.test(t)) t = t.replace(/,/g, '');
+        
+        const el = document.createElement('textarea');
+        el.value = t;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+
+        // Hiệu ứng nút bấm
+        const btn = document.getElementById('btnCopy');
+        btn.innerText = "✅ ĐÃ SAO CHÉP THÀNH CÔNG!";
+        btn.style.background = "#1565c0"; // Đổi sang màu xanh dương đậm hơn
+        
+        setTimeout(() => {
+            btn.innerText = "📋 SAO CHÉP KẾT QUẢ";
+            btn.style.background = "#2e7d32";
+        }, 2000);
+    }
 </script>
 </body>
 </html>
