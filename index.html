@@ -3,211 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HỆ THỐNG XỬ LÝ VĂN PHÒNG 2026</title>
+    <title>HỆ THỐNG VĂN PHÒNG LUXURY 2026 - FINAL</title>
+    
+    <!-- PDF Libraries -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <!-- Word Merge Libraries (Sửa lỗi Word experienced an error) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.6.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx-merger@1.2.2/dist/docx-merger.js"></script>
+    
+    <!-- UI & Utils -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
     <style>
         :root {
-            --primary: #1a73e8;
-            --secondary: #673ab7;
-            --warning: #fb8c00;
-            --success: #2e7d32;
-            --bg: #f4f7f9;
+            --primary: #0061ff; --secondary: #6022e3; --success: #00d084;
+            --danger: #ff4757; --dark: #1e293b; --light: #f8fafc;
         }
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--bg); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .card { 
-            background: white; 
-            width: 90%; 
-            max-width: 600px; 
-            padding: 30px; 
-            border-radius: 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
-        }
-        .header { 
-            background: linear-gradient(135deg, #1a73e8, #0d47a1); 
-            color: white; 
-            padding: 25px; 
-            border-radius: 15px; 
-            text-align: center; 
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
-        }
-        h1 { margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; font-weight: 500; }
-        #clock { font-size: 40px; font-weight: 700; margin: 10px 0; font-family: 'Courier New', monospace; }
-        #date { font-size: 16px; opacity: 0.8; font-weight: 300; }
-        
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; font-size: 13px; }
-        textarea { 
-            width: 100%; 
-            padding: 15px; 
-            border: 2px solid #e0e4e8; 
-            border-radius: 12px; 
-            font-size: 18px; 
-            box-sizing: border-box; 
-            min-height: 120px; 
-            outline: none;
-            transition: all 0.3s ease;
-            background: #fafbfc;
-        }
-        textarea:focus { border-color: var(--primary); background: #white; box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1); }
-        
-        .btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
-        button { 
-            padding: 14px 5px; 
-            border: none; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            font-weight: 700; 
-            color: white; 
-            background: var(--primary); 
-            font-size: 11px; 
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-        button:hover { filter: brightness(1.1); transform: translateY(-2px); }
-        button:active { transform: translateY(0); }
 
-        #res-box { 
-            margin-top: 20px; 
-            padding: 25px; 
-            background: #fffef2; 
-            border-radius: 12px;
-            border: 1px dashed #fbc02d; 
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; margin: 0; padding: 15px; display: flex; justify-content: center; min-height: 100vh; }
         
-        #res-text { font-size: 22px; color: #c62828; font-weight: 700; display: block; margin-bottom: 20px; line-height: 1.5; }
-        .copy-btn { background: var(--success); width: 100%; font-size: 15px; letter-spacing: 1px; }
+        .container { 
+            width: 100%; max-width: 1300px; background: white; border-radius: 30px; 
+            box-shadow: 0 25px 80px rgba(0,0,0,0.1); display: flex; flex-direction: column; 
+            overflow: hidden; height: 94vh; border: 1px solid #e2e8f0;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;
+            color: white; border-bottom: 4px solid var(--primary);
+        }
+        .clock-box { text-align: right; }
+        #full-date { font-size: 13px; font-weight: 600; color: #94a3b8; }
+        #digital-clock { font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 800; color: #fff; }
+
+        .app-body { display: flex; flex: 1; overflow: hidden; }
+        
+        /* SIDEBAR */
+        .sidebar { 
+            width: 280px; background: #f8fafc; border-right: 1px solid #e2e8f0; 
+            padding: 25px 15px; display: flex; flex-direction: column; gap: 8px;
+        }
+        .nav-item {
+            padding: 15px 20px; border-radius: 12px; cursor: pointer;
+            font-weight: 700; font-size: 13px; color: #64748b;
+            transition: 0.3s; display: flex; align-items: center; gap: 12px;
+            text-transform: uppercase;
+        }
+        .nav-item:hover { background: #f1f5f9; color: var(--primary); }
+        .nav-item.active { background: var(--primary); color: white; box-shadow: 0 10px 20px -5px rgba(0, 97, 255, 0.4); }
+
+        .main-view { flex: 1; padding: 35px; overflow-y: auto; position: relative; }
+
+        /* LOADER */
+        .loader-wrap { position: sticky; top: -35px; z-index: 999; background: #fff; padding: 15px 0; display: none; margin-bottom: 20px; }
+        .loader-bg { width: 100%; height: 8px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
+        .loader-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: width 0.2s; }
+
+        /* UI ELEMENTS */
+        .drop-zone { border: 2px dashed #cbd5e1; border-radius: 20px; padding: 50px; text-align: center; cursor: pointer; background: #fcfdfe; margin-bottom: 20px; }
+        .pdf-grid { display: none; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px; }
+        .pdf-card { background: #fff; border-radius: 18px; padding: 10px; border: 2px solid #f1f5f9; position: relative; cursor: grab; }
+        .pdf-card canvas { width: 100%; border-radius: 10px; pointer-events: none; }
+        .origin-badge { position: absolute; top: -12px; left: -12px; background: var(--dark); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; border: 3px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        
+        .file-list { margin-top: 20px; }
+        .file-item { display: flex; align-items: center; background: #f8fafc; padding: 15px 20px; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 8px; cursor: grab; }
+        
+        textarea { width: 100%; height: 220px; border: 2px solid #f1f5f9; border-radius: 20px; padding: 25px; font-size: 17px; outline: none; box-sizing: border-box; resize: none; font-family: inherit; }
+        .btn-v { padding: 18px; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 13px; width: 100%; transition: 0.3s; margin-top: 15px; letter-spacing: 0.5px; }
+        .btn-p { background: var(--primary); color: white; }
+
+        #toast { position: fixed; bottom: 40px; left: 50%; transform: translate(-50%, 150px); background: var(--dark); color: white; padding: 14px 35px; border-radius: 50px; font-weight: 700; box-shadow: 0 15px 35px rgba(0,0,0,0.2); transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); z-index: 9999; }
+        #toast.active { transform: translate(-50%, 0); }
+
+        .tab-pane { display: none; animation: fadeIn 0.4s ease; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="card">
+<div class="container">
     <div class="header">
-        <h1>Hệ Thống Hỗ Trợ Văn Phòng</h1>
-        <div id="clock">00:00:00</div>
-        <div id="date">Đang đồng bộ hệ thống...</div>
+        <div class="logo-box">
+            <div class="logo-main">VĂN PHÒNG <span>2026</span> PREMIUM</div>
+            <div class="logo-sub">Enterprise Management Solution</div>
+        </div>
+        <div class="clock-box">
+            <div id="full-date">Thứ ..., ngày 00/00/0000</div>
+            <div id="digital-clock">00:00:00</div>
+        </div>
     </div>
 
-    <div class="input-group">
-        <label>NỘI DUNG CẦN XỬ LÝ:</label>
-        <textarea id="input" placeholder="Nhập số tiền hoặc đoạn văn bản..." oninput="formatNum(this)"></textarea>
-    </div>
+    <div class="app-body">
+        <div class="sidebar">
+            <div class="nav-item active" onclick="switchPane('pane-text', this)">💼 Văn bản & Tiền</div>
+            <div class="nav-item" onclick="switchPane('pane-word', this)">📝 Ghép Word (Fix Lỗi)</div>
+            <div class="nav-item" onclick="switchPane('pane-pdf-m', this)">🔗 Ghép File PDF</div>
+            <div class="nav-item" onclick="switchPane('pane-sort', this)">🖐️ Sắp xếp trang PDF</div>
+            <div class="nav-item" onclick="switchPane('pane-del', this)" style="color:var(--danger)">✂️ Xóa trang PDF</div>
+        </div>
 
-    <div class="btns">
-        <button onclick="run('up')">Viết Hoa All</button>
-        <button onclick="run('smart')" style="background: var(--secondary)">Hoa Đầu Dòng</button>
-        <button onclick="run('money')" style="background: var(--warning)">Đọc Số Tiền ₫</button>
-    </div>
+        <div class="main-view">
+            <div class="loader-wrap" id="main-loader">
+                <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800; color:var(--primary); margin-bottom:8px;">
+                    <span id="l-msg">Đang chuẩn bị...</span><span id="l-per">0%</span>
+                </div>
+                <div class="loader-bg"><div class="loader-fill" id="l-bar"></div></div>
+            </div>
 
-    <div id="res-box">
-        <label>KẾT QUẢ PHÊ DUYỆT:</label>
-        <span id="res-text"></span>
-        <button class="copy-btn" id="btnCopy" onclick="copy()">📋 SAO CHÉP KẾT QUẢ</button>
+            <!-- 1. TEXT -->
+            <div id="pane-text" class="tab-pane active">
+                <textarea id="ti" placeholder="Nhập văn bản hoặc số tiền..." oninput="fm(this)"></textarea>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <button class="btn-v" style="background:var(--dark); color:white" onclick="rt('up')">VIẾT HOA</button>
+                    <button class="btn-v" style="background:var(--secondary); color:white" onclick="rt('smart')">Hoa Đầu Dòng</button>
+                    <button class="btn-v" style="background:var(--success); color:white" onclick="rt('money')">Đọc Số Tiền</button>
+                </div>
+                <div id="res-box" style="display:none; margin-top:25px; padding:25px; background:#fffef2; border-radius:20px; border:2px dashed #fbc02d">
+                    <div id="res-val" style="font-size:19px; font-weight:800; color:var(--danger); line-height:1.6; margin-bottom:15px"></div>
+                    <button class="btn-v btn-p" onclick="copyResult()">📋 Sao chép kết quả</button>
+                </div>
+            </div>
+
+            <!-- 2. WORD (FIXED) -->
+            <div id="pane-word" class="tab-pane">
+                <div class="drop-zone" onclick="document.getElementById('in-word').click()">
+                    <input type="file" id="in-word" multiple accept=".docx" hidden onchange="queueFiles(this, 'list-word', 'btn-word')">
+                    <strong> CHỌN NHIỀU FILE WORD ĐỂ GHÉP AN TOÀN</strong>
+                    <p style="font-size:12px; color:#64748b; margin-top:10px">Kéo thả để sắp xếp. File tải về sẽ mở được 100% bằng Microsoft Word.</p>
+                </div>
+                <div id="list-word" class="file-list"></div>
+                <button id="btn-word" class="btn-v" style="display:none; background:var(--secondary); color:white" onclick="mergeWordAction()">🚀 Ghép Word theo thứ tự</button>
+            </div>
+
+            <!-- 3. PDF MERGE -->
+            <div id="pane-pdf-m" class="tab-pane">
+                <div class="drop-zone" onclick="document.getElementById('in-pdf-m').click()">
+                    <input type="file" id="in-pdf-m" multiple accept=".pdf" hidden onchange="queueFiles(this, 'list-pdf-m', 'btn-pdf-m')">
+                    <strong> CHỌN NHIỀU FILE PDF ĐỂ GHÉP</strong>
+                </div>
+                <div id="list-pdf-m" class="file-list"></div>
+                <button id="btn-pdf-m" class="btn-v btn-p" style="display:none" onclick="mergePdfAction()">🚀 Bắt đầu ghép PDF</button>
+            </div>
+
+            <!-- 4. PDF SORT -->
+            <div id="pane-sort" class="tab-pane">
+                <div class="drop-zone" onclick="document.getElementById('in-sort').click()">
+                    <input type="file" id="in-sort" accept=".pdf" hidden onchange="loadPdfPreview(this, 'sort-grid', 'btn-save-sort')">
+                    <strong> TẢI 1 FILE PDF ĐỂ XẾP LẠI TRANG</strong>
+                </div>
+                <div id="sort-grid" class="pdf-grid"></div>
+                <button id="btn-save-sort" class="btn-v btn-p" style="display:none" onclick="savePdfSorted()">💾 Lưu thứ tự trang mới</button>
+            </div>
+
+            <!-- 5. PDF DELETE -->
+            <div id="pane-del" class="tab-pane">
+                <div class="drop-zone" onclick="document.getElementById('in-del').click()">
+                    <input type="file" id="in-del" accept=".pdf" hidden onchange="loadPdfPreview(this, 'del-grid', 'btn-save-del')">
+                    <strong> TẢI 1 FILE PDF ĐỂ XÓA TRANG</strong>
+                </div>
+                <div id="del-grid" class="pdf-grid"></div>
+                <button id="btn-save-del" class="btn-v" style="display:none; background:var(--danger); color:white" onclick="savePdfDeleted()">🗑️ Xóa trang đã chọn & Lưu</button>
+            </div>
+        </div>
     </div>
 </div>
 
+<div id="toast">✅ Đã thực hiện!</div>
+
 <script>
-    // Cập nhật thời gian từ hệ thống máy tính
-    function update() {
+    // Global State
+    let pdfMainBuf = null;
+    let delIdxSet = new Set();
+    let fileStorage = { 'list-word': [], 'list-pdf-m': [] };
+
+    // Update Clock
+    function updateClock() {
         const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString('vi-VN');
-        const opt = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
-        document.getElementById('date').innerText = now.toLocaleDateString('vi-VN', opt);
+        const days = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
+        document.getElementById('full-date').innerText = `${days[now.getDay()]}, ngày ${now.toLocaleDateString('vi-VN')}`;
+        document.getElementById('digital-clock').innerText = now.toLocaleTimeString('vi-VN');
     }
-    setInterval(update, 1000);
-    update();
+    setInterval(updateClock, 1000); updateClock();
 
-    // Định dạng số tự động (thêm dấu phẩy)
-    function formatNum(el) {
-        if (/[a-zA-Zà-ỹÀ-Ỹ]/.test(el.value)) return;
-        let v = el.value.replace(/,/g, '');
-        if (v && !isNaN(v)) el.value = Number(v).toLocaleString('en-US');
+    function switchPane(id, el) {
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); el.classList.add('active');
     }
 
-    // Xử lý logic nút bấm
-    function run(mode) {
-        const inp = document.getElementById('input').value.trim();
-        if (!inp) return;
-        let res = "";
-        if (mode === 'up') res = inp.toUpperCase();
-        else if (mode === 'smart') res = inp.toLowerCase().replace(/(^\w|\.\s+\w)/g, c => c.toUpperCase());
-        else res = toVND(inp);
+    function notify(msg) {
+        const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('active');
+        setTimeout(() => t.classList.remove('active'), 2500);
+    }
+
+    // --- TEXT MODULE ---
+    function fm(el) { if(/[a-z]/i.test(el.value)) return; let v = el.value.replace(/,/g,''); if(v && !isNaN(v)) el.value = Number(v).toLocaleString('en-US'); }
+    function rt(m) {
+        const v = document.getElementById('ti').value.trim(); if(!v) return;
+        let r = (m==='up')? v.toUpperCase() : (m==='smart')? v.toLowerCase().replace(/(^\w|\.\s+\w)/g, c=>c.toUpperCase()) : readMoney(v);
+        document.getElementById('res-val').innerText = r; document.getElementById('res-box').style.display = 'block';
+    }
+    function readMoney(s) {
+        const v = s.replace(/,/g,''), u = ["không","một","hai","ba","bốn","năm","sáu","bảy","tám","chín"], l = ["","nghìn","triệu","tỷ","nghìn tỷ","triệu tỷ"];
+        function r3(n, f) {
+            let s="", t=Math.floor(n/100), c=Math.floor((n%100)/10), d=n%10;
+            if(t>0 || f) s += u[t]+" trăm ";
+            if(c>1) s += u[c]+" mươi "; else if(c===1) s += "mười "; else if(t>0 && d>0) s += "lẻ ";
+            if(d>0) { if(c>1 && d===1) s += "mốt"; else if(c>0 && d===5) s += "lăm"; else s += u[d]; }
+            return s.trim();
+        }
+        let n = Math.abs(parseInt(v)); if(n===0) return "Không đồng ./.";
+        let st = n.toString(), bl = []; while(st.length>0) { bl.push(st.slice(-3)); st = st.slice(0,-3); }
+        let ar = []; for(let i=bl.length-1; i>=0; i--) { let val = parseInt(bl[i]); if(val>0) ar.push(r3(val, i < bl.length-1) + " " + l[i]); }
+        return ar.join(", ").charAt(0).toUpperCase() + ar.join(", ").slice(1) + " đồng ./.";
+    }
+    function copyResult() { navigator.clipboard.writeText(document.getElementById('res-val').innerText); notify("📋 Đã chép kết quả!"); }
+
+    // --- FILE QUEUE (WORD & PDF MERGE) ---
+    function queueFiles(inp, listId, btnId) {
+        fileStorage[listId].push(...Array.from(inp.files)); inp.value = ""; renderQueue(listId, btnId);
+    }
+    function renderQueue(listId, btnId) {
+        const container = document.getElementById(listId); container.innerHTML = "";
+        fileStorage[listId].forEach((file, idx) => {
+            const div = document.createElement('div'); div.className = 'file-item'; div.setAttribute('data-id', idx);
+            div.innerHTML = `<div style="margin-right:20px; color:#cbd5e1">☰</div><div style="flex:1;font-weight:700">${idx+1}. ${file.name}</div><div style="color:var(--danger);cursor:pointer;font-weight:900" onclick="removeFromQueue('${listId}', ${idx}, '${btnId}')">✕</div>`;
+            container.appendChild(div);
+        });
+        document.getElementById(btnId).style.display = fileStorage[listId].length >= 2 ? 'block' : 'none';
+        Sortable.create(container, { animation: 200, onEnd: () => {
+            const order = Array.from(container.children).map(c => parseInt(c.getAttribute('data-id')));
+            const oldList = [...fileStorage[listId]]; fileStorage[listId] = order.map(i => oldList[i]);
+            renderQueue(listId, btnId);
+        }});
+    }
+    function removeFromQueue(lid, idx, bid) { fileStorage[lid].splice(idx,1); renderQueue(lid, bid); }
+
+    // --- WORD ACTION (FIXED CORE) ---
+    function mergeWordAction() {
+        const btn = document.getElementById('btn-word'); btn.innerText = "⏳ ĐANG GHÉP AN TOÀN..."; btn.disabled = true;
+        const files = fileStorage['list-word'];
+        const readers = files.map(file => {
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsBinaryString(file);
+            });
+        });
+        Promise.all(readers).then(data => {
+            try {
+                const docx = new DocxMerger({}, data);
+                docx.save('blob', (blob) => {
+                    saveAs(blob, "Office2026_Merged.docx");
+                    btn.innerText = "🚀 GHÉP WORD"; btn.disabled = false;
+                    notify("✅ Ghép Word thành công!");
+                });
+            } catch (e) { alert("Lỗi: " + e.message); btn.disabled = false; }
+        });
+    }
+
+    // --- PDF ACTIONS ---
+    async function mergePdfAction() {
+        const doc = await PDFLib.PDFDocument.create();
+        for(let f of fileStorage['list-pdf-m']) {
+            const pdf = await PDFLib.PDFDocument.load(await f.arrayBuffer());
+            const pages = await doc.copyPages(pdf, pdf.getPageIndices());
+            pages.forEach(p => doc.addPage(p));
+        }
+        saveAs(new Blob([await doc.save()], {type:'application/pdf'}), "Office2026_Merged.pdf");
+        notify("✅ Ghép PDF thành công!");
+    }
+
+    async function loadPdfPreview(inp, gridId, btnId) {
+        const file = inp.files[0]; if(!file) return;
+        const grid = document.getElementById(gridId), lw = document.getElementById('main-loader'), lb = document.getElementById('l-bar'), lm = document.getElementById('l-msg'), lp = document.getElementById('l-per');
+        grid.style.display = 'none'; lw.style.display = 'block';
         
-        document.getElementById('res-text').innerText = res;
-        document.getElementById('res-box').style.display = 'block';
-        document.getElementById('btnCopy').innerText = "📋 SAO CHÉP KẾT QUẢ";
-        document.getElementById('btnCopy').style.background = "#2e7d32";
-    }
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        pdfMainBuf = new Uint8Array(await file.arrayBuffer());
+        const pdf = await pdfjsLib.getDocument({data: pdfMainBuf.slice(0)}).promise;
+        grid.innerHTML = ""; delIdxSet.clear();
 
-    // Thuật toán chuyển số sang chữ tiếng Việt
-    function toVND(s) {
-        const v = s.replace(/,/g, '');
-        if (isNaN(v) || v === "") return "Lỗi định dạng số!";
-        const units = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"];
-        const levels = ["", "nghìn", "triệu", "tỷ", "nghìn tỷ", "triệu tỷ"];
-        
-        function read3(n, full) {
-            let r = "", t = Math.floor(n/100), c = Math.floor((n%100)/10), d = n%10;
-            if (t > 0 || full) r += units[t] + " trăm ";
-            if (c > 1) r += units[c] + " mươi ";
-            else if (c === 1) r += "mười ";
-            else if (t > 0 && d > 0) r += "lẻ ";
-            if (d > 0) {
-                if (c > 1 && d === 1) r += "mốt";
-                else if (c > 0 && d === 5) r += "lăm";
-                else r += units[d];
+        for(let i=1; i<=pdf.numPages; i++) {
+            const pg = await pdf.getPage(i), vp = pg.getViewport({scale: 0.35});
+            const cv = document.createElement('canvas'), ctx = cv.getContext('2d');
+            cv.height = vp.height; cv.width = vp.width;
+            await pg.render({canvasContext: ctx, viewport: vp}).promise;
+
+            const div = document.createElement('div'); div.className = 'pdf-card'; div.setAttribute('data-idx', i-1);
+            div.innerHTML = `<div class="origin-badge">${i}</div><span style="display:block;margin-top:10px;font-size:11px;color:#94a3b8;text-align:center">Trang ${i}</span>`;
+            div.prepend(cv);
+
+            if(gridId === 'del-grid') {
+                div.onclick = () => {
+                    if(delIdxSet.has(i-1)) { delIdxSet.delete(i-1); div.style.background = '#fff'; div.style.opacity = '1'; }
+                    else { delIdxSet.add(i-1); div.style.background = '#fff5f5'; div.style.opacity = '0.4'; }
+                    document.getElementById(btnId).innerText = `🗑️ Xóa ${delIdxSet.size} trang & Lưu`;
+                };
             }
-            return r.trim();
+            grid.appendChild(div);
+            let p = Math.round((i/pdf.numPages)*100); lb.style.width = p+'%'; lp.innerText = p+'%'; lm.innerText = `Render: ${i}/${pdf.numPages}`;
+            await new Promise(r => setTimeout(r, 1));
         }
-
-        let n = Math.abs(parseInt(v));
-        if (n === 0) return "Không đồng ./.";
-        let str = n.toString(), blocks = [];
-        while (str.length > 0) { blocks.push(str.slice(-3)); str = str.slice(0, -3); }
-        let arr = [];
-        for (let i = blocks.length - 1; i >= 0; i--) {
-            let val = parseInt(blocks[i]);
-            if (val > 0) arr.push(read3(val, i < blocks.length - 1) + " " + levels[i]);
-        }
-        let f = arr.join(", ").trim();
-        return f.charAt(0).toUpperCase() + f.slice(1) + " đồng ./.";
+        setTimeout(() => { lw.style.display = 'none'; grid.style.display = 'grid'; document.getElementById(btnId).style.display = 'block'; if(gridId === 'sort-grid') Sortable.create(grid, { animation: 350 }); }, 500);
     }
 
-    // Sao chép kết quả (Bỏ Alert - Dùng hiệu ứng nút)
-    function copy() {
-        const textElement = document.getElementById('res-text');
-        let t = textElement.innerText;
-        if (t.includes("Lỗi")) return;
-        
-        // Xóa dấu phẩy nếu chỉ copy số thuần
-        if (/^[\d,]+$/.test(t)) t = t.replace(/,/g, '');
-        
-        const el = document.createElement('textarea');
-        el.value = t;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
+    async function savePdfSorted() {
+        const doc = await PDFLib.PDFDocument.load(pdfMainBuf), nd = await PDFLib.PDFDocument.create();
+        const order = Array.from(document.querySelectorAll('#sort-grid .pdf-card')).map(it => parseInt(it.getAttribute('data-idx')));
+        const pages = await nd.copyPages(doc, order); pages.forEach(p => nd.addPage(p));
+        saveAs(new Blob([await nd.save()], {type:'application/pdf'}), "Office2026_Sorted.pdf"); notify("✅ Đã lưu thứ tự!");
+    }
 
-        // Hiệu ứng nút bấm
-        const btn = document.getElementById('btnCopy');
-        btn.innerText = "✅ ĐÃ SAO CHÉP THÀNH CÔNG!";
-        btn.style.background = "#1565c0"; // Đổi sang màu xanh dương đậm hơn
-        
-        setTimeout(() => {
-            btn.innerText = "📋 SAO CHÉP KẾT QUẢ";
-            btn.style.background = "#2e7d32";
-        }, 2000);
+    async function savePdfDeleted() {
+        const doc = await PDFLib.PDFDocument.load(pdfMainBuf), sorted = Array.from(delIdxSet).sort((a,b)=>b-a);
+        sorted.forEach(idx => doc.removePage(idx));
+        saveAs(new Blob([await doc.save()], {type:'application/pdf'}), "Office2026_Deleted.pdf"); notify("✅ Đã xóa trang!");
     }
 </script>
 </body>
